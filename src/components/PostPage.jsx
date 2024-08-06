@@ -50,7 +50,7 @@ const PostPage = () => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <input type="file" accept="image/*" onChange={handleImageChange} />
+      <input class="img-btn" type="file" accept="image/*" onChange={handleImageChange} />
       {image && <img src={URL.createObjectURL(image)} alt="Selected" className="post-image-preview" />}
       <button onClick={handleSubmit}>Submit Post</button>
       {ogImageUrl && (
