@@ -1,33 +1,55 @@
+body {
+  /* background-color: pink; */
+  background-image: url("/public/bg.webp");
+}
 .post-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-  
-  .post-page input,
-  .post-page textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  .post-page img {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .post-page button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 70px;
+  padding: 20px;
+ 
+  border: 18x solid transparent; /* Set border to transparent to apply gradient */
+  border-image: linear-gradient(to right, #ff7f50, #ff6347, #ff4500) 1;
+  box-shadow: 0 0 15px rgba(255, 100, 66, 0.5); /* Orange shadow */
+  border-radius: 20px;
+  background-color: #ffffff1a;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  padding: 50px;
+}
+.heading {
+  font-size: 2em;
+  font-weight: bold;
+  background: linear-gradient(to right, #ff7f50, #ff6347, #ff4500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.post-page input,
+.post-page textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.post-page img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+}
+
+.post-page button {
+  padding: 10px 20px;
+  font-weight: 500;
+
+  background: linear-gradient(to right, #ff7f50, #ff6347, #ff4500);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
