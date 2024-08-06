@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { createCanvas, loadImage } = require('canvas');
+const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,38 +14,64 @@ app.post('/generate-og-image', upload.single('image'), async (req, res) => {
   const { title, content } = req.body;
   const imagePath = req.file ? req.file.path : null;
 
-  const buffer = await generateOgImage(title, content, imagePath);
-  const outputPath = path.join(__dirname, '../public/og-image.png');
-  fs.writeFileSync(outputPath, buffer);
-
-  res.json({ imageUrl: '/og-image.png' });
+  const imageUrl = await generateOgImage(title, content, imagePath);
+  res.json({ imageUrl });
 });
 
 const generateOgImage = async (title, content, imagePath) => {
-  const canvas = createCanvas(1200, 630);
-  const ctx = canvas.getContext('2d');
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
 
-  // Draw background
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const contentHtml = `
+    <html>
+    <head>
+      <style>
+        body {
+          width: 1200px;
+          height: 630px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          background-color: white;
+          font-family: Arial, sans-serif;
+        }
+        .container {
+          padding: 20px;
+        }
+        h1 {
+          font-size: 48px;
+          color: black;
+        }
+        p {
+          font-size: 24px;
+          color: #333;
+        }
+        img {
+          max-width: 100%;
+          height: auto;
+          margin-top: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>${title}</h1>
+        <p>${content.substring(0, 100)}...</p>
+        ${imagePath ? `<img src="file://${path.resolve(imagePath)}" />` : ''}
+      </div>
+    </body>
+    </html>
+  `;
 
-  // Draw title
-  ctx.font = 'bold 48px Arial';
-  ctx.fillStyle = '#000';
-  ctx.fillText(title, 50, 100);
+  await page.setContent(contentHtml);
+  await page.setViewport({ width: 1200, height: 630 });
 
-  // Draw content snippet
-  ctx.font = '30px Arial';
-  ctx.fillStyle = '#333';
-  ctx.fillText(content.substring(0, 100) + '...', 50, 200);
+  const outputPath = path.join(__dirname, '../public/og-image.png');
+  await page.screenshot({ path: outputPath });
+  await browser.close();
 
-  // Draw image if available
-  if (imagePath) {
-    const image = await loadImage(imagePath);
-    ctx.drawImage(image, 50, 250, 1100, 300);
-  }
-
-  return canvas.toBuffer();
+  return '/og-image.png';
 };
 
 app.listen(3001, () => {
